@@ -1,0 +1,27 @@
+from collections import deque
+
+class Solution:
+    def openLock(self, deadends: List[str], target: str) -> int:
+        if "0000" in deadends:
+            return -1
+
+        queue = deque()
+        queue.append("0000")
+        visit = set(deadends)
+        steps = 0
+
+        while queue:
+            steps += 1
+            for _ in range(len(queue)):
+                lock = queue.popleft()
+                for i in range(4):
+                    for j in [1, -1]:
+                        digit = str((int(lock[i]) + j + 10) % 10)
+                        nextLock = lock[:i] + digit + lock[i+1:]
+                        if nextLock in visit:
+                            continue
+                        if nextLock == target:
+                            return steps
+                        queue.append(nextLock)
+                        visit.add(nextLock)
+        return -1
